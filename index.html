@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rina@portfolio:~$</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Catppuccin Mocha */
+            --ctp-base: #1e1e2e;
+            --ctp-mantle: #181825;
+            --ctp-crust: #11111b;
+            --ctp-text: #cdd6f4;
+            --ctp-subtext0: #a6adc8;
+            --ctp-subtext1: #bac2de;
+            --ctp-surface0: #313244;
+            --ctp-surface1: #45475a;
+            --ctp-surface2: #585b70;
+            --ctp-overlay0: #6c7086;
+            --ctp-overlay1: #7f849c;
+            --ctp-overlay2: #9399b2;
+            --ctp-blue: #89b4fa;
+            --ctp-lavender: #b4befe;
+            --ctp-sapphire: #74c7ec;
+            --ctp-sky: #89dceb;
+            --ctp-teal: #94e2d5;
+            --ctp-green: #a6e3a1;
+            --ctp-yellow: #f9e2af;
+            --ctp-peach: #fab387;
+            --ctp-maroon: #eba0ac;
+            --ctp-red: #f38ba8;
+            --ctp-mauve: #cba6f7;
+            --ctp-pink: #f5c2e7;
+            --ctp-flamingo: #f2cdcd;
+            --ctp-rosewater: #f5e0dc;
+        }
+
+        body {
+            font-family: 'Courier New', 'Monaco', 'Menlo', monospace;
+            background: var(--ctp-base);
+            color: var(--ctp-text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .terminal {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--ctp-mantle);
+            border: 2px solid var(--ctp-surface0);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .terminal-header {
+            background: var(--ctp-crust);
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid var(--ctp-surface0);
+            border-radius: 6px 6px 0 0;
+        }
+
+        .terminal-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-button.close { background: var(--ctp-red); }
+        .terminal-button.minimize { background: var(--ctp-yellow); }
+        .terminal-button.maximize { background: var(--ctp-green); }
+
+        .terminal-title {
+            margin-left: auto;
+            margin-right: auto;
+            color: var(--ctp-subtext0);
+            font-size: 13px;
+        }
+
+        .terminal-body {
+            padding: 20px;
+            min-height: 400px;
+        }
+
+        .prompt {
+            color: var(--ctp-green);
+            user-select: none;
+        }
+
+        .prompt-user {
+            color: var(--ctp-mauve);
+        }
+
+        .prompt-at {
+            color: var(--ctp-text);
+        }
+
+        .prompt-path {
+            color: var(--ctp-blue);
+        }
+
+        .command-line {
+            margin-bottom: 20px;
+        }
+
+        .command {
+            color: var(--ctp-yellow);
+        }
+
+        .output {
+            margin-left: 0;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            color: var(--ctp-mauve);
+            font-size: 18px;
+            font-weight: bold;
+            margin: 20px 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '▸';
+            color: var(--ctp-green);
+        }
+
+        .item {
+            margin-bottom: 15px;
+            padding-left: 20px;
+        }
+
+        .item-title {
+            color: var(--ctp-blue);
+            font-weight: bold;
+        }
+
+        .item-date {
+            color: var(--ctp-peach);
+        }
+
+        .item-meta {
+            color: var(--ctp-subtext0);
+            font-size: 14px;
+        }
+
+        .item-desc {
+            color: var(--ctp-text);
+            margin-top: 5px;
+        }
+
+        .tag {
+            display: inline-block;
+            background: var(--ctp-surface0);
+            color: var(--ctp-lavender);
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-right: 6px;
+            margin-top: 5px;
+        }
+
+        a {
+            color: var(--ctp-sapphire);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--ctp-sapphire);
+        }
+
+        a:hover {
+            color: var(--ctp-sky);
+            border-bottom-color: var(--ctp-sky);
+        }
+
+        .tree-line {
+            color: var(--ctp-overlay1);
+        }
+
+        .tree-item {
+            margin-left: 20px;
+            color: var(--ctp-subtext1);
+        }
+
+        .skill-category {
+            color: var(--ctp-teal);
+            font-weight: bold;
+        }
+
+        .skill-item {
+            color: var(--ctp-text);
+            margin-left: 40px;
+        }
+
+        .skill-item::before {
+            content: '├─ ';
+            color: var(--ctp-overlay1);
+        }
+
+        .skill-item:last-child::before {
+            content: '└─ ';
+        }
+
+        .comment {
+            color: var(--ctp-overlay2);
+            font-style: italic;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: var(--ctp-green);
+            animation: blink 1s infinite;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .nav-menu {
+            background: var(--ctp-surface0);
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            border-left: 3px solid var(--ctp-mauve);
+        }
+
+        .nav-item {
+            color: var(--ctp-lavender);
+            margin: 5px 0;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .nav-item:hover {
+            color: var(--ctp-blue);
+        }
+
+        .contact-info {
+            background: var(--ctp-surface0);
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            border-left: 3px solid var(--ctp-blue);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .terminal-body {
+                padding: 15px;
+                font-size: 14px;
+            }
+
+            .item {
+                padding-left: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="terminal-header">
+            <div class="terminal-button close"></div>
+            <div class="terminal-button minimize"></div>
+            <div class="terminal-button maximize"></div>
+            <div class="terminal-title">rina@portfolio: ~</div>
+        </div>
+        <div class="terminal-body" id="terminal">
+            <div class="command-line">
+                <span class="prompt">
+                    <span class="prompt-user">rina</span><span class="prompt-at">@</span><span class="prompt-path">portfolio</span>:~$
+                </span>
+                <span class="command">cat welcome.txt</span>
+            </div>
+            <div class="output">
+                <pre style="color: var(--ctp-mauve); font-weight: bold;">
+╦═╗╦╔╗╔╔═╗  ╦═╗╔═╗╔╗╔╔═╗╦═╗╦╔═╗╔═╗╔╗╔
+╠╦╝║║║║╠═╣  ╠╦╝╠═╣║║║╠═╣╠╦╝║╚═╗║ ║║║║
+╩╚═╩╝╚╝╩ ╩  ╩╚═╩ ╩╝╚╝╩ ╩╩╚═╩╚═╝╚═╝╝╚╝
+                </pre>
+                <p><span class="comment"># Applied Mathematics · Computational Research · Data Science</span></p>
+                <p><span class="comment"># Location: Itaosy, Antananarivo, Madagascar</span></p>
+            </div>
+
+            <div class="command-line">
+                <span class="prompt">
+                    <span class="prompt-user">rina</span><span class="prompt-at">@</span><span class="prompt-path">portfolio</span>:~$
+                </span>
+                <span class="command">ls --contact</span>
+            </div>
+            <div class="output contact-info">
+                <p>📧 Email: <a href="mailto:ranarisonrina5@gmail.com">ranarisonrina5@gmail.com</a></p>
+                <p>🔗 LinkedIn: <a href="https://linkedin.com/in/rina-ranarison" target="_blank">linkedin.com/in/rina-ranarison</a></p>
+                <p>💻 GitHub: <a href="https://github.com/ryurina" target="_blank">github.com/ryurina</a></p>
+                <p>📱 Phone: <a href="tel:+261382137854">+261 38 21 378 54</a></p>
+            </div>
+
+            <div class="command-line">
+                <span class="prompt">
+                    <span class="prompt-user">rina</span><span class="prompt-at">@</span><span class="prompt-path">portfolio</span>:~$
+                </span>
+                <span class="command">cat about.md</span>
+            </div>
+            <div class="output">
+                <p class="item-desc">
+                    Applied mathematics student with a strong foundation in numerical computation and problem-solving. 
+                    Passionate about leveraging mathematical theory to address real-world challenges in data science, 
+                    quantitative finance, and computational modeling. Currently pursuing Master's studies while actively 
+                    contributing to research and innovation in blockchain, machine learning, and statistical analysis.
+                </p>
+                <br>
+                <p><span style="color: var(--ctp-yellow);">Research Interests:</span></p>
+                <p class="item-desc">
+                    → <span style="color: var(--ctp-peach);">Primary:</span> Algebra, Computational Mathematics<br>
+                    → <span style="color: var(--ctp-peach);">Applied:</span> Quantitative Finance, Machine Learning, Blockchain
+                </p>
+            </div>
+
+            <div class="command-line">
+                <span class="prompt">
+                    <span class="prompt-user">rina</span><span class="prompt-at">@</span><span class="prompt-path">portfolio</span>:~$
+                </span>
+                <span class="command">ls -la education/</span>
+            </div>
+            <div class="output">
+                <div class="section-title">Education</div>
+                
+                <div class="item">
+                    <p><span class="item-title">Master 1 in Applied Mathematics</span> <span class="item-date">[2024–Present]</span></p>
+                    <p class="item-meta">University of Antananarivo, Madagascar</p>
+                    <p class="item-desc">
+                        • Specialization: Numerical Computation<br>
+                        • Focus: Numerical methods, Algebra, and Algorithm<br>
+                        • Coursework: Numerical Computation, Algorithm, Algebra, Applied Statistics
+                    </p>
+                </div>
+
+                <div class="item">
+                    <p><span class="item-title">Bachelor in Mathematics (PAAC)</span> <span class="item-date">[2024]</span></p>
+                    <p class="item-meta">University of Antananarivo, Madagascar</p>
+                    <p class="item-desc">
+                        • Major Areas: Probability Theory, Abstract Algebra, Algorithmics, Numerical Computation
+                    </p>
+                </div>
+
+                <div class="item">
+                    <p><span class="item-title">Baccalauréat, Science Track (C)</span> <span class="item-date">[2018]</span></p>
+                    <p class="item-meta">Lycée Emeraude Itaosy, Madagascar</p>
+                </div>
+            </div>
+
+            <div class="command-line">
+                <span class="prompt">
+                    <span class="prompt-user">rina</span><span class="prompt-at">@</span><span class="prompt-path">portfolio</span>:~$
+                </span>
+                <span class="command">cat projects.log</span>
+            </div>
+            <div class="output">
+                <div class="section-title">Projects & Research</div>
+
+                <div class="item">
+                    <p><span class="item-title">Machine Learning: Sentiment Analysis</span></p>
+                    <p class="item-desc">
+                        Developed sentiment analysis system using NLP in Python to analyze customer feedback 
+                        from British Airways dataset. Implemented NLP techniques to extract insights from text data.
+                    </p>
+                    <p class="item-meta">→ <a href="https://github.com/ryurina" target="_blank">View on GitHub</a></p>
+                    <div>
+                        <span class="tag">Python</span>
+                        <span class="tag">NLP</span>
+                        <span class="tag">Machine Learning</span>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <p><span class="item-title">Statistical Modeling: Demographic Survey Analysis</span></p>
+                    <p class="item-desc">
+                        Conducted comprehensive demographic survey analysis of Malagasy households using R and RStudio. 
+                        Applied statistical methods to extract meaningful insights.
+                    </p>
+                    <div>
+                        <span class="tag">R</span>
+                        <span class="tag">Statistics</span>
+                        <span class="tag">Data Analysis</span>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <p><span class="item-title">Blockchain Research: Hedera Hashgraph</span></p>
+                    <p class="item-desc">
+                        In-depth study of distributed ledger technology focusing on Hedera Hashgraph ecosystem. 
+                        Certified Hashgraph Developer by The Hashgraph Association.
+                    </p>
+                    <div>
+                        <span class="tag">Blockchain</span>
+                        <span class="tag">Distributed Systems</span>
+                        <span class="tag">Hedera</span>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <p><span class="item-title">Akademika.mg - EdTech Startup</span></p>
+                    <p class="item-desc">
+                        Co-founded educational technology startup based in Madagascar, focused on improving 
+                        access to quality education through digital solutions.
+                    </p>
+                    <div>
+                        <span class="tag">Entrepreneurship</span>
+                        <span class="tag">EdTech</span>
+                        <span class="tag">Leadership</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="command-line">
+                <span class="prompt">
+                    <span class="prompt-user">rina</span><span class="prompt-at">@</span><span class="prompt-path">portfolio</span>:~$
+                </span>
+                <span class="command">tree skills/</span>
+            </div>
+            <div class="output">
+                <div class="section-title">Technical Skills</div>
+                
+                <p class="skill-category">📦 Mathematical Software</p>
+                <p class="skill-item">Python (NumPy, SciPy, Pandas)</p>
+                <p class="skill-item">R (Statistical Computing)</p>
+                <p class="skill-item">MAPLE</p>
+
+                <p class="skill-category">💾 Programming Languages</p>
+                <p class="skill-item">Python</p>
+                <p class="skill-item">R</p>
+                <p class="skill-item">C</p>
+                <p class="skill-item">Haskell (Functional)</p>
+                <p class="skill-item">SQL</p>
+                <p class="skill-item">Bash scripting</p>
+
+                <p class="skill-category">🔬 Scientific Computing</p>
+                <p class="skill-item">Jupyter Notebooks</p>
+                <p class="skill-item">LaTeX</p>
+                <p class="skill-item">Git (Version Control)</p>
+
+                <p class="skill-category">📊 Data Analysis</p>
+                <p class="skill-item">SPSS</p>
+                <p class="skill-item">R Studio</p>
+                <p class="skill-item">Excel</p>
+
+                <p class="skill-category">⚙️ Infrastructure & Tools</p>
+                <p class="skill-item">Linux/Unix CLI</p>
+                <p class="skill-item">AWS Cloud</p>
+
+                <p class="skill-category">🌍 Languages</p>
+                <p class="skill-item">Malagasy (Native)</p>
+                <p class="skill-item">French (Fluent)</p>
+                <p class="skill-item">English (Advanced)</p>
+                <p class="skill-item">Russian (Basic)</p>
+            </div>
+
+            <div class="command-line">
+                <span class="prompt">
+                    <span class="prompt-user">rina</span><span class="prompt-at">@</span><span class="prompt-path">portfolio</span>:~$
+                </span>
+                <span class="command">cat achievements.txt</span>
+            </div>
+            <div class="output">
+                <div class="section-title">Achievements & Recognition</div>
+
+                <div class="item">
+                    <p><span class="item-title">🏆 Hedera Africa Hackathon</span> <span class="item-date">[2025]</span></p>
+                    <p class="item-desc">Participant in continent-wide innovation program (Exponential Science & Hashgraph Association)</p>
+                </div>
+
+                <div class="item">
+                    <p><span class="item-title">🥇 1st Place - BSides Madagascar CTF</span> <span class="item-date">[2024]</span></p>
+                    <p class="item-desc">Winner of cybersecurity capture-the-flag competition</p>
+                </div>
+
+                <div class="item">
+                    <p><span class="item-title">💰 Miary Digitale Grant Recipient</span> <span class="item-date">[2023]</span></p>
+                    <p class="item-desc">PIC Madagascar Project - Akademika</p>
+                </div>
+
+                <div class="item">
+                    <p><span class="item-title">🥉 3rd Place - Weekly Coding Challenge</span> <span class="item-date">[2022]</span></p>
+                    <p class="item-desc">Algorithm design competition (TechZara)</p>
+                </div>
+
+                <div class="item">
+                    <p><span class="item-title">🎯 Finalist - POESAM Madagascar</span> <span class="item-date">[2022]</span></p>
+                    <p class="item-desc">Orange Entrepreneur Prize (Africa & Middle East) - Akademika</p>
+                </div>
+
+                <div class="item">
+                    <p><span class="item-title">♟️ 3rd Place - Chess Tournament</span> <span class="item-date">[2022]</span></p>
+                    <p class="item-desc">FMSA, University of Antananarivo</p>
+                </div>
+            </div>
+
+            <div class="command-line">
+                <span class="prompt">
+                    <span class="prompt-user">rina</span><span class="prompt-at">@</span><span class="prompt-path">portfolio</span>:~$
+                </span>
+                <span class="command">echo "Thanks for visiting!"</span>
+            </div>
+            <div class="output">
+                <p style="color: var(--ctp-green);">Thanks for visiting!</p>
+                <p class="comment"># Feel free to reach out via email or LinkedIn</p>
+            </div>
+
+            <div class="command-line">
+                <span class="prompt">
+                    <span class="prompt-user">rina</span><span class="prompt-at">@</span><span class="prompt-path">portfolio</span>:~$
+                </span>
+                <span class="cursor"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Optional: Add some terminal-like interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            const terminal = document.getElementById('terminal');
+            
+            // Smooth scroll to bottom on load
+            setTimeout(() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 100);
+        });
+    </script>
+</body>
+</html>
