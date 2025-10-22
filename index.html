@@ -12,7 +12,7 @@
         }
 
         :root {
-            /* Catppuccin Mocha */
+            /* Catppuccin Mocha (Dark) */
             --ctp-base: #1e1e2e;
             --ctp-mantle: #181825;
             --ctp-crust: #11111b;
@@ -41,12 +41,43 @@
             --ctp-rosewater: #f5e0dc;
         }
 
+        [data-theme="light"] {
+            /* Catppuccin Latte (Light) */
+            --ctp-base: #eff1f5;
+            --ctp-mantle: #e6e9ef;
+            --ctp-crust: #dce0e8;
+            --ctp-text: #4c4f69;
+            --ctp-subtext0: #6c6f85;
+            --ctp-subtext1: #5c5f77;
+            --ctp-surface0: #ccd0da;
+            --ctp-surface1: #bcc0cc;
+            --ctp-surface2: #acb0be;
+            --ctp-overlay0: #9ca0b0;
+            --ctp-overlay1: #8c8fa1;
+            --ctp-overlay2: #7c7f93;
+            --ctp-blue: #1e66f5;
+            --ctp-lavender: #7287fd;
+            --ctp-sapphire: #209fb5;
+            --ctp-sky: #04a5e5;
+            --ctp-teal: #179299;
+            --ctp-green: #40a02b;
+            --ctp-yellow: #df8e1d;
+            --ctp-peach: #fe640b;
+            --ctp-maroon: #e64553;
+            --ctp-red: #d20f39;
+            --ctp-mauve: #8839ef;
+            --ctp-pink: #ea76cb;
+            --ctp-flamingo: #dd7878;
+            --ctp-rosewater: #dc8a78;
+        }
+
         body {
             font-family: 'Courier New', 'Monaco', 'Menlo', monospace;
             background: var(--ctp-base);
             color: var(--ctp-text);
             line-height: 1.6;
             padding: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .terminal {
@@ -56,6 +87,7 @@
             border: 2px solid var(--ctp-surface0);
             border-radius: 8px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .terminal-header {
@@ -80,9 +112,26 @@
 
         .terminal-title {
             margin-left: auto;
-            margin-right: auto;
+            margin-right: 10px;
             color: var(--ctp-subtext0);
             font-size: 13px;
+        }
+
+        .theme-toggle {
+            background: var(--ctp-surface0);
+            border: 1px solid var(--ctp-surface1);
+            border-radius: 4px;
+            padding: 4px 10px;
+            color: var(--ctp-text);
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--ctp-surface1);
+            color: var(--ctp-mauve);
         }
 
         .terminal-body {
@@ -279,6 +328,7 @@
             <div class="terminal-button minimize"></div>
             <div class="terminal-button maximize"></div>
             <div class="terminal-title">rina@portfolio: ~</div>
+            <button class="theme-toggle" id="themeToggle">☀️ light</button>
         </div>
         <div class="terminal-body" id="terminal">
             <div class="command-line">
@@ -531,11 +581,33 @@
     </div>
 
     <script>
-        // Optional: Add some terminal-like interactions
         document.addEventListener('DOMContentLoaded', function() {
             const terminal = document.getElementById('terminal');
+            const themeToggle = document.getElementById('themeToggle');
+            const html = document.documentElement;
             
-            // Smooth scroll to bottom on load
+            // Check for saved theme preference or default to 'dark'
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            if (currentTheme === 'light') {
+                html.setAttribute('data-theme', 'light');
+                themeToggle.textContent = '🌙 dark';
+            }
+            
+            // Theme toggle functionality
+            themeToggle.addEventListener('click', function() {
+                const theme = html.getAttribute('data-theme');
+                if (theme === 'light') {
+                    html.removeAttribute('data-theme');
+                    themeToggle.textContent = '☀️ light';
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    html.setAttribute('data-theme', 'light');
+                    themeToggle.textContent = '🌙 dark';
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+            
+            // Smooth scroll to top on load
             setTimeout(() => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }, 100);
