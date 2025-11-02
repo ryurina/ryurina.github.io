@@ -1,0 +1,1 @@
+import{_ as e,c as r,o as i,ae as n}from"./chunks/framework.CBTkueSR.js";const u=JSON.parse('{"title":"Resume","description":"","frontmatter":{},"headers":[],"relativePath":"resume.md","filePath":"resume.md"}'),t={name:"resume.md"};function o(s,a,l,c,h,d){return i(),r("div",null,[...a[0]||(a[0]=[n("",39)])])}const m=e(t,[["render",o]]);export{u as __pageData,m as default};
